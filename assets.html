@@ -55,53 +55,151 @@
         }
 
         .asset-card {
-            background: linear-gradient(145deg, rgba(255, 215, 0, 0.1), rgba(0, 0, 0, 0.5));
-            border: 1px solid rgba(255, 215, 0, 0.2);
+            background: linear-gradient(145deg, rgba(0, 255, 255, 0.1), rgba(0, 0, 0, 0.8));
+            border: 1px solid #0ff;
             border-radius: 15px;
             padding: 20px;
             margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .asset-title {
-            color: #B4B4B4;
-            font-size: 14px;
-            margin-bottom: 10px;
+        .asset-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="4" height="4"><path d="M0 0h1v1H0z" fill="%230ff" opacity=".1"/></svg>');
+            opacity: 0.1;
         }
 
-        .asset-amount {
-            color: #FFD700;
-            font-size: 24px;
+        .asset-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1));
+        }
+
+        .asset-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
             margin-bottom: 20px;
+        }
+
+        .asset-item {
+            text-align: center;
+        }
+
+        .asset-value {
+            font-size: 24px;
+            color: #0ff;
+            margin-bottom: 5px;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        .asset-label {
+            font-size: 14px;
+            color: rgba(0, 255, 255, 0.7);
         }
 
         .action-buttons {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
+            gap: 10px;
         }
 
         .action-btn {
-            background: linear-gradient(145deg, rgba(255, 215, 0, 0.2), rgba(218, 165, 32, 0.1));
-            border: 1px solid rgba(255, 215, 0, 0.3);
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid rgba(0, 255, 255, 0.3);
             border-radius: 10px;
-            color: #FFD700;
-            padding: 12px;
+            padding: 10px;
+            color: #0ff;
             font-size: 14px;
             cursor: pointer;
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(0, 255, 255, 0.2),
+                transparent
+            );
+            transform: rotate(45deg);
+            animation: buttonGlow 2s linear infinite;
+        }
+
+        @keyframes buttonGlow {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        /* 记录标签样式 */
+        .record-tabs {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
+            margin: 20px 0;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
         }
 
-        .action-btn i {
-            font-size: 20px;
+        .record-tab {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            color: rgba(0, 255, 255, 0.7);
+            cursor: pointer;
+            position: relative;
         }
 
-        .action-btn:hover {
-            transform: translateY(-2px);
-            background: linear-gradient(145deg, rgba(255, 215, 0, 0.3), rgba(218, 165, 32, 0.2));
+        .record-tab.active {
+            color: #0ff;
+        }
+
+        .record-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #0ff;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        /* 记录列表样式 */
+        .record-list {
+            margin-top: 20px;
+        }
+
+        .record-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+        }
+
+        .record-amount {
+            color: #0ff;
+            font-size: 16px;
+        }
+
+        .record-time {
+            color: rgba(0, 255, 255, 0.5);
+            font-size: 14px;
         }
 
         /* 弹窗样式 */
@@ -113,8 +211,8 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
             backdrop-filter: blur(5px);
+            z-index: 1000;
         }
 
         .modal-content {
@@ -122,7 +220,8 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            background: #1a1a1a;
+            background: linear-gradient(145deg, rgba(0, 255, 255, 0.1), rgba(0, 0, 0, 0.9));
+            border-top: 1px solid #0ff;
             border-top-left-radius: 20px;
             border-top-right-radius: 20px;
             padding: 20px;
@@ -140,19 +239,18 @@
             align-items: center;
             margin-bottom: 20px;
             padding-bottom: 10px;
-            border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
         }
 
         .modal-title {
-            color: #FFD700;
+            color: #0ff;
             font-size: 18px;
-            font-weight: normal;
         }
 
         .close-modal {
             background: none;
             border: none;
-            color: #888;
+            color: rgba(0, 255, 255, 0.7);
             font-size: 24px;
             cursor: pointer;
         }
@@ -162,41 +260,50 @@
         }
 
         .input-label {
-            color: #B4B4B4;
+            color: rgba(0, 255, 255, 0.7);
             font-size: 14px;
             margin-bottom: 8px;
         }
 
         .input-field {
             width: 100%;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 215, 0, 0.2);
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid rgba(0, 255, 255, 0.3);
             border-radius: 10px;
             padding: 12px;
             color: #fff;
             font-size: 16px;
         }
 
-        .input-field:focus {
-            outline: none;
-            border-color: #FFD700;
-        }
-
         .submit-btn {
             width: 100%;
-            background: linear-gradient(45deg, #DAA520, #FFD700);
-            border: none;
+            background: linear-gradient(45deg, rgba(0, 255, 255, 0.3), rgba(0, 255, 255, 0.1));
+            border: 1px solid #0ff;
             border-radius: 10px;
-            color: #000;
+            color: #0ff;
             padding: 15px;
             font-size: 16px;
-            font-weight: bold;
             cursor: pointer;
             margin-top: 20px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .submit-btn:hover {
-            opacity: 0.9;
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(0, 255, 255, 0.2),
+                transparent
+            );
+            transform: rotate(45deg);
+            animation: buttonGlow 2s linear infinite;
         }
 
         /* 提示框样式 */
@@ -224,44 +331,44 @@
             <h1>我的资产</h1>
         </div>
 
-        <!-- USDT资产卡片 -->
+        <!-- 资产卡片 -->
         <div class="asset-card">
-            <div class="asset-title">USDT余额</div>
-            <div class="asset-amount">1,234.56</div>
+            <div class="asset-grid">
+                <div class="asset-item">
+                    <div class="asset-value">0.00</div>
+                    <div class="asset-label">USDT</div>
+                </div>
+                <div class="asset-item">
+                    <div class="asset-value">0.00</div>
+                    <div class="asset-label">RBT</div>
+                </div>
+                <div class="asset-item">
+                    <div class="asset-value">5.00</div>
+                    <div class="asset-label">冻结RBT</div>
+                </div>
+            </div>
             <div class="action-buttons">
-                <button class="action-btn" onclick="showModal('deposit', 'USDT')">
-                    <i class="fas fa-plus"></i>
-                    <span>充值</span>
-                </button>
-                <button class="action-btn" onclick="showModal('withdraw', 'USDT')">
-                    <i class="fas fa-minus"></i>
-                    <span>提现</span>
-                </button>
-                <button class="action-btn" onclick="showModal('exchange', 'USDT')">
-                    <i class="fas fa-exchange-alt"></i>
-                    <span>兑换</span>
-                </button>
+                <button class="action-btn" onclick="showModal('deposit')">充值</button>
+                <button class="action-btn" onclick="showModal('withdraw')">提币</button>
+                <button class="action-btn" onclick="showModal('exchange')">兑换</button>
             </div>
         </div>
 
-        <!-- AIOT资产卡片 -->
-        <div class="asset-card">
-            <div class="asset-title">AIOT余额</div>
-            <div class="asset-amount">5,678.90</div>
-            <div class="action-buttons">
-                <button class="action-btn" onclick="showModal('deposit', 'AIOT')">
-                    <i class="fas fa-plus"></i>
-                    <span>充值</span>
-                </button>
-                <button class="action-btn" onclick="showModal('withdraw', 'AIOT')">
-                    <i class="fas fa-minus"></i>
-                    <span>提现</span>
-                </button>
-                <button class="action-btn" onclick="showModal('exchange', 'AIOT')">
-                    <i class="fas fa-exchange-alt"></i>
-                    <span>兑换</span>
-                </button>
+        <!-- 记录标签 -->
+        <div class="record-tabs">
+            <div class="record-tab active" onclick="switchTab(this, 'deposit')">充值记录</div>
+            <div class="record-tab" onclick="switchTab(this, 'withdraw')">提币记录</div>
+            <div class="record-tab" onclick="switchTab(this, 'exchange')">兑换记录</div>
+            <div class="record-tab" onclick="switchTab(this, 'income')">收益记录</div>
+        </div>
+
+        <!-- 记录列表 -->
+        <div class="record-list">
+            <div class="record-item">
+                <div class="record-amount">10 USDT</div>
+                <div class="record-time">2023-08-10 14:08:50</div>
             </div>
+            <!-- 更多记录项可以动态添加 -->
         </div>
     </div>
 
@@ -269,7 +376,7 @@
     <div class="modal" id="depositModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">充值</h2>
+                <div class="modal-title">充值</div>
                 <button class="close-modal" onclick="closeModal('depositModal')">×</button>
             </div>
             <div class="input-group">
@@ -284,22 +391,22 @@
         </div>
     </div>
 
-    <!-- 提现弹窗 -->
+    <!-- 提币弹窗 -->
     <div class="modal" id="withdrawModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">提现</h2>
+                <div class="modal-title">提币</div>
                 <button class="close-modal" onclick="closeModal('withdrawModal')">×</button>
             </div>
             <div class="input-group">
-                <div class="input-label">提现金额</div>
-                <input type="number" class="input-field" placeholder="请输入提现金额">
+                <div class="input-label">提币金额</div>
+                <input type="number" class="input-field" placeholder="请输入提币金额">
             </div>
             <div class="input-group">
-                <div class="input-label">提现地址</div>
-                <input type="text" class="input-field" placeholder="请输入提现地址">
+                <div class="input-label">提币地址</div>
+                <input type="text" class="input-field" placeholder="请输入提币地址">
             </div>
-            <button class="submit-btn" onclick="handleWithdraw()">确认提现</button>
+            <button class="submit-btn" onclick="handleWithdraw()">确认提币</button>
         </div>
     </div>
 
@@ -307,7 +414,7 @@
     <div class="modal" id="exchangeModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">兑换</h2>
+                <div class="modal-title">兑换</div>
                 <button class="close-modal" onclick="closeModal('exchangeModal')">×</button>
             </div>
             <div class="input-group">
@@ -316,7 +423,7 @@
             </div>
             <div class="input-group">
                 <div class="input-label">兑换比例</div>
-                <input type="text" class="input-field" readonly value="1 USDT = 1 AIOT">
+                <input type="text" class="input-field" readonly value="1 USDT = 1 RBT">
             </div>
             <button class="submit-btn" onclick="handleExchange()">确认兑换</button>
         </div>
@@ -329,8 +436,8 @@
         let currentToken = '';
 
         // 显示弹窗
-        function showModal(type, token) {
-            currentToken = token;
+        function showModal(type) {
+            currentToken = type;
             const modalId = type + 'Modal';
             const modal = document.getElementById(modalId);
             if (modal) {
@@ -340,7 +447,7 @@
                 // 更新弹窗标题
                 const title = modal.querySelector('.modal-title');
                 if (title) {
-                    title.textContent = `${type === 'deposit' ? '充值' : type === 'withdraw' ? '提现' : '兑换'} ${token}`;
+                    title.textContent = `${type === 'deposit' ? '充值' : type === 'withdraw' ? '提币' : '兑换'} ${type === 'deposit' ? 'USDT' : type === 'withdraw' ? 'RBT' : ''}`;
                 }
             }
         }
@@ -365,15 +472,24 @@
             }, duration);
         }
 
+        // 切换标签
+        function switchTab(tab, type) {
+            // 移除所有标签的active类
+            document.querySelectorAll('.record-tab').forEach(t => t.classList.remove('active'));
+            // 添加当前标签的active类
+            tab.classList.add('active');
+            // 这里可以添加加载对应类型记录的逻辑
+        }
+
         // 处理充值
         function handleDeposit() {
             showToast(`${currentToken}充值请求已提交`);
             closeModal('depositModal');
         }
 
-        // 处理提现
+        // 处理提币
         function handleWithdraw() {
-            showToast(`${currentToken}提现请求已提交`);
+            showToast(`${currentToken}提币请求已提交`);
             closeModal('withdrawModal');
         }
 
@@ -401,4 +517,5 @@
         }, { passive: false });
     </script>
 </body>
+</html> 
 </html> 
