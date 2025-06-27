@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TP钱包DApp示例</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #2196F3;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .content {
+            margin-bottom: 20px;
+        }
+        .button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+        }
+        .button:active {
+            background-color: #1976D2;
+        }
+        .info-box {
+            background-color: #E3F2FD;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>欢迎使用TP钱包DApp</h1>
+            <p>这是一个示例页面</p>
+        </div>
+        
+        <div class="content">
+            <button class="button" onclick="checkWallet()">检查钱包连接</button>
+            <button class="button" onclick="getAccount()">获取账户信息</button>
+            
+            <div class="info-box" id="walletInfo">
+                钱包信息将显示在这里
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function checkWallet() {
+            const infoBox = document.getElementById('walletInfo');
+            if (typeof window.tp !== 'undefined') {
+                infoBox.innerHTML = '已检测到TP钱包！';
+            } else {
+                infoBox.innerHTML = '未检测到TP钱包，请在TP钱包DApp浏览器中打开';
+            }
+        }
+
+        async function getAccount() {
+            const infoBox = document.getElementById('walletInfo');
+            if (typeof window.tp !== 'undefined') {
+                try {
+                    const account = await window.tp.getCurrentWallet();
+                    infoBox.innerHTML = `当前账户信息：<br>地址：${account.address}<br>网络：${account.blockchain}`;
+                } catch (error) {
+                    infoBox.innerHTML = '获取账户信息失败：' + error.message;
+                }
+            } else {
+                infoBox.innerHTML = '请在TP钱包DApp浏览器中打开';
+            }
+        }
+    </script>
+</body>
+</html> 
