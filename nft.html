@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>我的NFT</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background-color: #000;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: #FFD700;
+            font-size: 20px;
+            padding: 5px;
+            cursor: pointer;
+        }
+
+        .header h1 {
+            color: #fff;
+            font-size: 18px;
+            font-weight: normal;
+            flex-grow: 1;
+            text-align: center;
+            margin: 0 10px;
+        }
+
+        .transfer-record {
+            color: #FFD700;
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+        .tab-container {
+            display: flex;
+            padding: 10px 20px;
+            gap: 10px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .tab-btn.active {
+            color: #FFD700;
+            background: linear-gradient(45deg, rgba(255, 215, 0, 0.1), rgba(255, 165, 0, 0.1));
+            border-radius: 10px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .nft-list {
+            padding: 10px 20px;
+        }
+
+        .nft-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+        }
+
+        .nft-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .nft-info {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 10px;
+            font-size: 14px;
+            color: #B4B4B4;
+        }
+
+        .nft-info span:nth-child(odd) {
+            color: #888;
+        }
+
+        .nft-info span:nth-child(even) {
+            color: #fff;
+            text-align: right;
+        }
+
+        .pending-profit {
+            color: #4CAF50 !important;
+        }
+
+        .transfer-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(45deg, #DAA520, #FFD700);
+            border: none;
+            border-radius: 8px;
+            color: #000;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 15px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .transfer-btn:hover {
+            opacity: 0.9;
+        }
+
+        .no-nft {
+            text-align: center;
+            padding: 50px 20px;
+            color: #666;
+            font-size: 16px;
+        }
+
+        .no-nft i {
+            font-size: 48px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        /* 添加弹窗样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            backdrop-filter: blur(3px);
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 400px;
+            background: #1a1a1a;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            padding: 20px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+        }
+
+        .modal-title {
+            color: #FFD700;
+            font-size: 18px;
+            font-weight: normal;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #FFD700;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .record-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .record-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+        }
+
+        .record-info {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .record-info span:nth-child(odd) {
+            color: #888;
+        }
+
+        .record-info span:nth-child(even) {
+            color: #fff;
+            text-align: right;
+        }
+
+        .no-records {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+        }
+
+        /* 转赠弹窗样式 */
+        .transfer-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            backdrop-filter: blur(3px);
+        }
+
+        .transfer-modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 400px;
+            background: #1a1a1a;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            padding: 20px;
+        }
+
+        .transfer-modal-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+        }
+
+        .transfer-modal-title {
+            color: #FFD700;
+            font-size: 18px;
+            font-weight: normal;
+        }
+
+        .transfer-input-group {
+            margin-bottom: 20px;
+        }
+
+        .transfer-input-group label {
+            display: block;
+            color: #888;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .transfer-input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .transfer-input:focus {
+            outline: none;
+            border-color: #FFD700;
+        }
+
+        .transfer-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .transfer-confirm-btn {
+            flex: 1;
+            padding: 12px;
+            background: linear-gradient(45deg, #DAA520, #FFD700);
+            border: none;
+            border-radius: 8px;
+            color: #000;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .transfer-cancel-btn {
+            flex: 1;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 8px;
+            color: #FFD700;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .transfer-confirm-btn:hover,
+        .transfer-cancel-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* 提示框样式 */
+        .toast-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: #FFD700;
+            padding: 15px 30px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            z-index: 2000;
+            display: none;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .toast-message.success {
+            border-color: rgba(0, 255, 0, 0.2);
+            color: #00FF00;
+        }
+
+        .toast-message.error {
+            border-color: rgba(255, 0, 0, 0.2);
+            color: #FF4444;
+        }
+
+        /* 分享弹窗样式 */
+        .share-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            backdrop-filter: blur(3px);
+        }
+
+        .share-modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 400px;
+            background: #1a1a1a;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            padding: 20px;
+        }
+
+        .share-modal-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+        }
+
+        .share-modal-title {
+            color: #FFD700;
+            font-size: 18px;
+            font-weight: normal;
+            margin: 0;
+        }
+
+        .share-description {
+            color: #888;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .invite-link-container {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .invite-link {
+            color: #FFD700;
+            font-size: 14px;
+            word-break: break-all;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .copy-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(45deg, #DAA520, #FFD700);
+            border: none;
+            border-radius: 8px;
+            color: #000;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .copy-btn:hover {
+            opacity: 0.9;
+        }
+
+
+
+        .close-share-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .close-share-btn:hover {
+            color: #FFD700;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <button class="back-btn" onclick="history.back()">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <h1>我的NFT</h1>
+        <a href="#" class="transfer-record" onclick="showTransferRecords(event)">转赠记录</a>
+    </div>
+
+    <div class="tab-container">
+        <button class="tab-btn active" onclick="switchTab('income')">收益NFT</button>
+        <button class="tab-btn" onclick="switchTab('no-income')">无效NFT</button>
+    </div>
+
+    <div class="nft-list" id="nftList">
+        <!-- NFT卡片模板 -->
+        <div class="nft-card">
+            <img src="https://placehold.co/400x400/FFD700/000000?text=NFT" alt="NFT" class="nft-image">
+            <div class="nft-info">
+                <span>编号：</span>
+                <span>202208033320152552</span>
+                <span>时间：</span>
+                <span>2022-08-03 21:21:36</span>
+                <span>累计收益：</span>
+                <span>20 USDT</span>
+                <span>待收收益：</span>
+                <span class="pending-profit">50/300</span>
+            </div>
+            <button class="transfer-btn">转赠</button>
+        </div>
+    </div>
+
+    <!-- 转赠记录弹窗 -->
+    <div class="modal" id="transferModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">转赠记录</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="record-list">
+                <div class="record-item">
+                    <div class="record-info">
+                        <span>NFT编号：</span>
+                        <span>202208033320152552</span>
+                        <span>转赠时间：</span>
+                        <span>2022-08-03 21:21:36</span>
+                        <span>接收地址：</span>
+                        <span>0x1234...5678</span>
+                    </div>
+                </div>
+                <!-- 可以添加更多记录 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 转赠NFT弹窗 -->
+    <div class="transfer-modal" id="nftTransferModal">
+        <div class="transfer-modal-content">
+            <div class="transfer-modal-header">
+                <h2 class="transfer-modal-title">转赠NFT</h2>
+            </div>
+            <div class="transfer-input-group">
+                <label>NFT编号</label>
+                <div class="transfer-input" id="transferNftId" style="background: rgba(255,255,255,0.1);" readonly></div>
+            </div>
+            <div class="transfer-input-group">
+                <label>接收方地址</label>
+                <input type="text" class="transfer-input" id="transferAddress" placeholder="请输入接收方地址">
+            </div>
+            <div class="transfer-buttons">
+                <button class="transfer-cancel-btn" onclick="closeTransferModal()">取消</button>
+                <button class="transfer-confirm-btn" onclick="confirmTransfer()">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 提示框 -->
+    <div id="toastMessage" class="toast-message"></div>
+
+    <!-- 分享好友弹窗 -->
+    <div class="share-modal" id="shareModal">
+        <div class="share-modal-content">
+            <button class="close-share-btn" onclick="closeShareModal()">×</button>
+            <div class="share-modal-header">
+                <h2 class="share-modal-title">分享好友</h2>
+            </div>
+            <p class="share-description">复制您的专属邀请链接，邀请好友加入</p>
+            <div class="invite-link-container">
+                <div class="invite-link" id="inviteLink"></div>
+                <button class="copy-btn" onclick="copyInviteLink()">复制邀请链接</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        let currentTab = 'income';
+        const nftData = {
+            income: [
+                {
+                    id: '202208033320152552',
+                    time: '2022-08-03 21:21:36',
+                    totalProfit: '20 USDT',
+                    pendingProfit: '50/300',
+                    image: 'https://placehold.co/400x400/FFD700/000000?text=NFT'
+                },
+                {
+                    id: '202208033320152552',
+                    time: '2022-08-03 21:21:36',
+                    totalProfit: '20 USDT',
+                    pendingProfit: '50/300',
+                    image: 'https://placehold.co/400x400/FFD700/000000?text=NFT'
+                }
+            ],
+            'no-income': []
+        };
+
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            renderNFTs();
+        }
+
+        function renderNFTs() {
+            const nftList = document.getElementById('nftList');
+            const nfts = nftData[currentTab];
+
+            if (nfts.length === 0) {
+                nftList.innerHTML = `
+                    <div class="no-nft">
+                        <i class="fas fa-image"></i>
+                        <p>暂无NFT</p>
+                    </div>
+                `;
+                return;
+            }
+
+            nftList.innerHTML = nfts.map(nft => `
+                <div class="nft-card">
+                    <img src="${nft.image}" alt="NFT" class="nft-image">
+                    <div class="nft-info">
+                        <span>编号：</span>
+                        <span>${nft.id}</span>
+                        <span>时间：</span>
+                        <span>${nft.time}</span>
+                        <span>累计收益：</span>
+                        <span>${nft.totalProfit}</span>
+                        <span>待收收益：</span>
+                        <span class="pending-profit">${nft.pendingProfit}</span>
+                    </div>
+                    <button class="transfer-btn" onclick="showTransferModal('${nft.id}')">转赠</button>
+                </div>
+            `).join('');
+        }
+
+        function transferNFT(id) {
+            // 实现转赠功能
+            alert('转赠功能开发中...');
+        }
+
+        // 显示转赠记录弹窗
+        function showTransferRecords(event) {
+            event.preventDefault();
+            const modal = document.getElementById('transferModal');
+            modal.style.display = 'block';
+            // 阻止滚动穿透
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 关闭弹窗
+        function closeModal() {
+            const modal = document.getElementById('transferModal');
+            modal.style.display = 'none';
+            // 恢复滚动
+            document.body.style.overflow = 'auto';
+        }
+
+        // 显示转赠NFT弹窗
+        function showTransferModal(nftId) {
+            const modal = document.getElementById('nftTransferModal');
+            const nftIdElement = document.getElementById('transferNftId');
+            modal.style.display = 'block';
+            nftIdElement.textContent = nftId;
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 关闭转赠NFT弹窗
+        function closeTransferModal() {
+            const modal = document.getElementById('nftTransferModal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            // 清空输入
+            document.getElementById('transferAddress').value = '';
+        }
+
+        // 显示提示信息
+        function showToast(message, type = '') {
+            const toast = document.getElementById('toastMessage');
+            toast.textContent = message;
+            toast.className = 'toast-message ' + type;
+            toast.style.display = 'block';
+            
+            // 2秒后自动隐藏
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 2000);
+        }
+
+        // 验证钱包地址
+        function isValidWalletAddress(address) {
+            // 这里添加具体的钱包地址验证逻辑
+            // 示例：检查是否是有效的以太坊地址（0x开头的42位十六进制字符串）
+            const ethAddressRegex = /^0x[a-fA-F0-9]{40}$/;
+            return ethAddressRegex.test(address);
+        }
+
+        // 确认转赠
+        function confirmTransfer() {
+            const nftId = document.getElementById('transferNftId').textContent;
+            const address = document.getElementById('transferAddress').value.trim();
+            
+            if (!address) {
+                showToast('请输入接收方地址', 'error');
+                return;
+            }
+
+            if (!isValidWalletAddress(address)) {
+                showToast('请输入正确的钱包地址', 'error');
+                return;
+            }
+
+            // 这里添加转赠逻辑
+            console.log('转赠NFT:', nftId, '到地址:', address);
+            
+            // 模拟转赠成功
+            setTimeout(() => {
+                showToast('转赠成功', 'success');
+                closeTransferModal();
+                // 刷新NFT列表
+                renderNFTs();
+            }, 1000);
+        }
+
+        // 生成邀请链接
+        function generateInviteLink() {
+            // 这里替换成实际的用户ID或其他唯一标识
+            const userId = 'USER_ID';
+            return `${window.location.origin}/invite/${userId}`;
+        }
+
+        // 显示分享弹窗
+        function showShareModal() {
+            const modal = document.getElementById('shareModal');
+            const inviteLinkElement = document.getElementById('inviteLink');
+            const inviteLink = generateInviteLink();
+            
+            modal.style.display = 'block';
+            inviteLinkElement.textContent = inviteLink;
+            
+
+            
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 关闭分享弹窗
+        function closeShareModal() {
+            const modal = document.getElementById('shareModal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // 复制邀请链接
+        function copyInviteLink() {
+            const inviteLink = document.getElementById('inviteLink').textContent;
+            navigator.clipboard.writeText(inviteLink).then(() => {
+                showToast('邀请链接已复制', 'success');
+            }).catch(() => {
+                showToast('复制失败，请手动复制', 'error');
+            });
+        }
+
+        // 点击弹窗外部关闭
+        window.onclick = function(event) {
+            const transferModal = document.getElementById('nftTransferModal');
+            const recordsModal = document.getElementById('transferModal');
+            const shareModal = document.getElementById('shareModal');
+            
+            if (event.target == transferModal) {
+                closeTransferModal();
+            }
+            if (event.target == recordsModal) {
+                closeModal();
+            }
+            if (event.target == shareModal) {
+                closeShareModal();
+            }
+        }
+
+        // 初始化渲染
+        renderNFTs();
+    </script>
+</body>
+</html> 

@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的社区</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            padding-top: 60px; /* 为固定头部留出空间 */
+        }
+
+        /* 头部导航栏 */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: linear-gradient(to bottom, #1a1a1a, #000);
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 1000;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: #FFD700;
+            font-size: 20px;
+            padding: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .back-btn:hover {
+            color: #fff;
+        }
+
+        .page-title {
+            flex-grow: 1;
+            text-align: center;
+            color: #FFD700;
+            font-size: 18px;
+            margin: 0;
+            padding-right: 40px; /* 为了平衡返回按钮的宽度 */
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* 基本信息卡片样式 */
+        .info-card {
+            background: linear-gradient(145deg, rgba(255, 215, 0, 0.1), rgba(0, 0, 0, 0.5));
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+        }
+
+        .info-row:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .info-value {
+            color: #FFD700;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .copy-btn {
+            background: none;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 4px;
+            color: #FFD700;
+            padding: 4px 8px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 215, 0, 0.1);
+            border-color: #FFD700;
+        }
+
+        /* 团队数据样式 */
+        .team-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            background: rgba(255, 215, 0, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .stat-value {
+            color: #FFD700;
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #888;
+            font-size: 12px;
+        }
+
+        /* 标签页样式 */
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: #888;
+            padding: 10px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            color: #FFD700;
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #FFD700;
+        }
+
+        /* 列表样式 */
+        .list-item {
+            background: rgba(255, 215, 0, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .list-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+        }
+
+        .list-id {
+            color: #FFD700;
+            font-size: 16px;
+        }
+
+        .list-time {
+            color: #888;
+            font-size: 12px;
+        }
+
+        .list-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .list-stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .list-stat-label {
+            color: #888;
+            font-size: 12px;
+        }
+
+        .list-stat-value {
+            color: #FFD700;
+            font-size: 14px;
+        }
+
+        .empty-list {
+            text-align: center;
+            color: #888;
+            padding: 30px;
+            background: rgba(255, 215, 0, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 10px;
+        }
+
+        /* 提示消息样式 */
+        .toast {
+            position: fixed;
+            bottom: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 4px;
+            z-index: 1000;
+            display: none;
+            animation: fadeInOut 2s ease;
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translate(-50%, 20px); }
+            15% { opacity: 1; transform: translate(-50%, 0); }
+            85% { opacity: 1; transform: translate(-50%, 0); }
+            100% { opacity: 0; transform: translate(-50%, -20px); }
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部导航栏 -->
+    <div class="header">
+        <button class="back-btn" onclick="window.location.href='index.html'">
+            <i class="fas fa-arrow-left"></i>
+            <span>返回</span>
+        </button>
+        <h1 class="page-title">我的社区</h1>
+    </div>
+
+    <div class="container">
+        <!-- 基本信息 -->
+        <div class="info-card">
+            <div class="info-row">
+                <span class="info-label">我的ID</span>
+                <div class="info-value">
+                    <span>88888888</span>
+                    <button class="copy-btn" onclick="copyText('88888888')">复制</button>
+                </div>
+            </div>
+            <div class="info-row">
+                <span class="info-label">上级ID</span>
+                <div class="info-value">
+                    <span>66666666</span>
+                    <button class="copy-btn" onclick="copyText('66666666')">复制</button>
+                </div>
+            </div>
+            <div class="team-stats">
+                <div class="stat-item">
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">直推人数</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">36</div>
+                    <div class="stat-label">团队人数</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">5600</div>
+                    <div class="stat-label">团队业绩</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 标签页 -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('direct')">直推列表</button>
+            <button class="tab-btn" onclick="switchTab('team')">团队列表</button>
+        </div>
+
+        <!-- 列表容器 -->
+        <div id="listContainer"></div>
+    </div>
+
+    <!-- 提示消息 -->
+    <div id="toast" class="toast"></div>
+
+    <script>
+        // 模拟数据
+        const listData = {
+            direct: [
+                {
+                    id: '12345678',
+                    time: '2024-01-20 14:30',
+                    personalPerformance: '1200 USDT',
+                    teamPerformance: '3600 USDT'
+                },
+                {
+                    id: '23456789',
+                    time: '2024-01-19 15:45',
+                    personalPerformance: '800 USDT',
+                    teamPerformance: '2400 USDT'
+                }
+            ],
+            team: []
+        };
+
+        // 切换标签页
+        function switchTab(tab) {
+            // 更新标签按钮状态
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // 渲染对应列表
+            renderList(tab);
+        }
+
+        // 渲染列表
+        function renderList(tab) {
+            const container = document.getElementById('listContainer');
+            const list = listData[tab];
+
+            if (list.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-list">
+                        <i class="fas fa-inbox" style="font-size: 24px; margin-bottom: 10px; display: block;"></i>
+                        暂无数据
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = list.map(item => `
+                <div class="list-item">
+                    <div class="list-header">
+                        <div class="list-id">${item.id}</div>
+                        <div class="list-time">${item.time}</div>
+                    </div>
+                    <div class="list-stats">
+                        <div class="list-stat">
+                            <span class="list-stat-label">个人业绩</span>
+                            <span class="list-stat-value">${item.personalPerformance}</span>
+                        </div>
+                        <div class="list-stat">
+                            <span class="list-stat-label">团队业绩</span>
+                            <span class="list-stat-value">${item.teamPerformance}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 复制文本
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('复制成功');
+            }).catch(() => {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                    document.execCommand('copy');
+                    showToast('复制成功');
+                } catch (err) {
+                    showToast('复制失败');
+                }
+                document.body.removeChild(textarea);
+            });
+        }
+
+        // 显示提示消息
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.style.display = 'block';
+            
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 2000);
+        }
+
+        // 初始化渲染直推列表
+        renderList('direct');
+    </script>
+</body>
+</html> 

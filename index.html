@@ -3,103 +3,1294 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TP钱包DApp示例</title>
+    <title>DMT盲盒</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-        body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            line-height: 1.6;
-            padding: 20px;
-            background-color: #f8f9fa;
-            color: #333;
         }
+        
+        body {
+            background-color: #000;
+            color: #fff;
+            min-height: 100vh;
+            position: relative;
+            background-image: 
+                linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+                linear-gradient(45deg, rgba(255,165,0,0.1) 1px, transparent 1px),
+                linear-gradient(-45deg, rgba(255,165,0,0.1) 1px, transparent 1px);
+            background-size: 100% 100%, 30px 30px, 30px 30px;
+        }
+
         .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 12px;
             padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-width: 450px;
+            margin: 0 auto;
         }
+
         .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .header h1 {
-            color: #2196F3;
-            font-size: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
             margin-bottom: 10px;
         }
-        .content {
+
+        .header h1 {
+            color: #fff;
+            font-size: 24px;
+            text-align: center;
+            flex-grow: 1;
+            font-weight: normal;
+        }
+
+        .menu-btn {
+            width: 30px;
+            height: 30px;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            padding: 0;
+        }
+
+        .audio-tip {
+            background: rgba(40, 40, 40, 0.8);
+            color: #B4B4B4;
+            padding: 12px 20px;
+            border-radius: 25px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            border: 1px solid rgba(255,165,0,0.3);
+        }
+
+        .audio-tip i {
+            margin-right: 8px;
+            color: #FFD700;
+        }
+
+        .price {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 20px;
+            color: #FFD700;
+        }
+
+        .price strong {
+            font-size: 24px;
+        }
+
+        .mystery-box {
+            width: 220px;
+            height: 220px;
+            margin: 30px auto;
+            position: relative;
+            perspective: 1000px;
+        }
+
+        .mystery-box::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(138,43,226,0.2) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            z-index: -1;
+        }
+
+        .box-3d {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .box-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #8A2BE2, #FF1493);
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(138,43,226,0.5);
+        }
+
+        .question-mark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 80px;
+            color: white;
+            text-shadow: 0 0 20px rgba(255,255,255,0.8);
+        }
+
+        .function-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .function-btn {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid #FFD700;
+            border-radius: 20px;
+            padding: 25px 15px;
+            color: #FFD700;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .function-btn::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 20px;
+            background: linear-gradient(45deg, #FFD700, transparent, #FFD700);
+            z-index: -1;
+            animation: borderGlow 2s linear infinite;
+        }
+
+        @keyframes borderGlow {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .function-btn i {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .function-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .function-btn:active {
+            transform: translateY(1px);
+        }
+
+        .purchase-options {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            border: 1px solid rgba(255,215,0,0.2);
+        }
+
+        .token-options {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
             margin-bottom: 20px;
         }
-        .button {
+
+        .token-option {
+            display: flex;
+            align-items: center;
+            color: #FFD700;
+            gap: 5px;
+        }
+
+        .token-option input[type="radio"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #FFD700;
+        }
+
+        .buy-button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #DAA520, #FFD700);
+            border: none;
+            border-radius: 10px;
+            color: #000;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+
+        .available-tokens {
+            text-align: center;
+            color: #B4B4B4;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .progress-title {
+            color: #FFD700;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .progress-container {
+            position: relative;
+            width: 100%;
+            height: 150px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .progress-ring {
+            width: 150px;
+            height: 150px;
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring circle {
+            fill: none;
+            stroke-width: 12;
+            stroke-linecap: round;
+        }
+
+        .progress-ring .background {
+            stroke: rgba(255,215,0,0.2);
+        }
+
+        .progress-ring .progress {
+            stroke: #FFD700;
+            stroke-dasharray: 314;
+            stroke-dashoffset: 157; /* 调整这个值来改变进度 */
+            transition: stroke-dashoffset 0.5s;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 16px;
+            color: #FFD700;
+        }
+
+        .view-more {
             display: block;
             width: 100%;
             padding: 12px;
-            background-color: #2196F3;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            margin-bottom: 10px;
-            cursor: pointer;
+            background: rgba(255,215,0,0.1);
+            border: 1px solid rgba(255,215,0,0.3);
+            border-radius: 10px;
+            color: #FFD700;
+            margin-top: 15px;
             text-align: center;
             text-decoration: none;
+            font-size: 14px;
         }
-        .button:active {
-            background-color: #1976D2;
+
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background-color: #fff;
+            animation: sparkle 1.5s infinite;
         }
-        .info-box {
-            background-color: #E3F2FD;
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        /* 侧边菜单样式 */
+        .side-menu {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 85%;
+            height: 100vh;
+            background: linear-gradient(to bottom, #1a1a1a, #000);
+            z-index: 1000;
+            transition: left 0.3s ease;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .side-menu.active {
+            left: 0;
+        }
+
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            display: none;
+            backdrop-filter: blur(3px);
+        }
+
+        .menu-overlay.active {
+            display: block;
+        }
+
+        .address-card {
+            background: linear-gradient(45deg, rgba(255, 215, 0, 0.1), rgba(255, 165, 0, 0.1));
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            color: #FFD700;
+        }
+
+        .address-card h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            font-weight: normal;
+            color: #FFD700;
+        }
+
+        .address-text {
+            font-size: 14px;
+            word-break: break-all;
+            margin-bottom: 10px;
+            opacity: 0.8;
+            color: #FFD700;
+        }
+
+        .wallet-status {
+            font-size: 14px;
+            color: #FFD700;
+            opacity: 0.8;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
             padding: 15px;
-            border-radius: 6px;
-            margin-top: 20px;
+            color: #FFD700;
+            text-decoration: none;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .menu-item i {
+            margin-right: 15px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .menu-item .arrow {
+            margin-left: auto;
+            margin-right: 0;
+            font-size: 12px;
+            opacity: 0.5;
+        }
+
+        .menu-item:hover {
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .menu-item.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .menu-item span {
+            flex-grow: 1;
+        }
+
+        .connect-wallet-btn {
+            padding: 8px 20px;
+            border: 1px solid #FFD700;
+            border-radius: 20px;
+            background: none;
+            color: #FFD700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .connect-wallet-btn i {
+            margin-right: 8px;
+        }
+
+        .connect-wallet-btn:hover {
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .connect-wallet-btn.connected {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .activate-btn {
+            display: none;
+            margin: 20px auto;
+            padding: 10px 30px;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            border: none;
+            border-radius: 25px;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .activate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(255, 215, 0, 0.3);
+        }
+
+        .activate-btn.loading {
+            opacity: 0.7;
+            cursor: wait;
+        }
+
+        .activate-btn i {
+            margin-right: 8px;
+        }
+
+        /* 按钮禁用状态 */
+        .btn-disabled {
+            opacity: 0.5;
+            cursor: not-allowed !important;
+            pointer-events: none;
+        }
+
+        .menu-item.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* 分享弹窗样式 */
+        .share-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            backdrop-filter: blur(3px);
+        }
+
+        .share-modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 400px;
+            background: #1a1a1a;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            padding: 20px;
+        }
+
+        .share-modal-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+        }
+
+        .share-modal-title {
+            color: #FFD700;
+            font-size: 18px;
+            font-weight: normal;
+            margin: 0;
+        }
+
+        .share-description {
+            color: #888;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .invite-link-container {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .invite-link {
+            color: #FFD700;
+            font-size: 14px;
+            word-break: break-all;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .copy-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(45deg, #DAA520, #FFD700);
+            border: none;
+            border-radius: 8px;
+            color: #000;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .copy-btn:hover {
+            opacity: 0.9;
+        }
+
+        .close-share-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .close-share-btn:hover {
+            color: #FFD700;
+        }
+
+        /* 提示框样式 */
+        .toast-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: #FFD700;
+            padding: 15px 30px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            z-index: 2000;
+            display: none;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .toast-message.success {
+            border-color: rgba(0, 255, 0, 0.2);
+            color: #00FF00;
+        }
+
+        .toast-message.error {
+            border-color: rgba(255, 0, 0, 0.2);
+            color: #FF4444;
+        }
+
+        /* 社区按钮样式 */
+        .community-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(145deg, rgba(255, 215, 0, 0.2), rgba(218, 165, 32, 0.1));
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 10px;
+            color: #FFD700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            margin-bottom: 15px;
+        }
+
+        .community-btn:hover {
+            background: linear-gradient(145deg, rgba(255, 215, 0, 0.3), rgba(218, 165, 32, 0.2));
+            transform: translateY(-2px);
+        }
+
+        .community-btn i {
+            font-size: 24px;
+        }
+
+        .community-btn span {
+            font-weight: 500;
+        }
+
+        /* 按钮点击效果 */
+        .community-btn:active {
+            transform: translateY(1px);
+        }
+
+        /* 功能按钮网格 */
+        .function-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            padding: 20px;
+        }
+
+        .function-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: none;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            width: 100%;
+            text-decoration: none;
+        }
+
+        .function-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(145deg, rgba(255, 215, 0, 0.1), rgba(0, 0, 0, 0.5));
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .function-icon::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, 
+                transparent 0%, 
+                rgba(255, 215, 0, 0.1) 45%, 
+                transparent 100%);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .function-icon i {
+            font-size: 24px;
+            color: #FFD700;
+        }
+
+        .function-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            transition: color 0.3s ease;
+        }
+
+        /* 社区按钮特殊样式 */
+        .community-icon {
+            background: linear-gradient(145deg, rgba(255, 215, 0, 0.2), rgba(218, 165, 32, 0.1));
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .community-icon i {
+            font-size: 28px;
+        }
+
+        /* 按钮悬停效果 */
+        .function-btn:hover .function-icon {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.1);
+        }
+
+        .function-btn:hover .function-label {
+            color: #FFD700;
         }
     </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
+    <div class="menu-overlay" id="menuOverlay"></div>
+    <div class="side-menu" id="sideMenu">
+        <div class="address-card">
+            <h3>钱包地址</h3>
+            <div class="address-text" id="walletAddressText">未连接</div>
+            <div class="wallet-status" id="walletStatusText">状态：未连接</div>
+        </div>
+
+        <a href="#" class="menu-item">
+            <i class="fas fa-info-circle"></i>
+            <span>项目介绍</span>
+            <i class="fas fa-chevron-right arrow"></i>
+        </a>
+        <a href="#" class="menu-item">
+            <i class="fas fa-users"></i>
+            <span>我的社区</span>
+            <i class="fas fa-chevron-right arrow"></i>
+        </a>
+        <a href="#" class="menu-item" onclick="showShareModal()">
+            <i class="fas fa-share-alt"></i>
+            <span>分享好友</span>
+            <i class="fas fa-chevron-right arrow"></i>
+        </a>
+        <a href="#" class="menu-item">
+            <i class="fas fa-image"></i>
+            <span>我的NFT</span>
+            <i class="fas fa-chevron-right arrow"></i>
+        </a>
+        <a href="#" class="menu-item">
+            <i class="fas fa-wallet"></i>
+            <span>我的资产</span>
+            <i class="fas fa-chevron-right arrow"></i>
+        </a>
+        <a href="#" class="menu-item">
+            <i class="fas fa-cog"></i>
+            <span>语言设置</span>
+            <i class="fas fa-chevron-right arrow"></i>
+        </a>
+        <a href="#" class="menu-item">
+            <i class="fas fa-chart-pie"></i>
+            <span>FOMO分红</span>
+            <i class="fas fa-chevron-right arrow"></i>
+        </a>
+        <a href="#" class="menu-item">
+            <i class="fas fa-bullhorn"></i>
+            <span>系统公告</span>
+            <i class="fas fa-chevron-right arrow"></i>
+        </a>
+    </div>
+
     <div class="container">
         <div class="header">
-            <h1>欢迎使用TP钱包DApp</h1>
-            <p>这是一个示例页面</p>
+            <button class="menu-btn" id="menuBtn">☰</button>
+            <h1>DMT</h1>
+            <button class="connect-wallet-btn" id="connectWalletBtn">
+                <i class="fas fa-wallet"></i>
+                <span>连接钱包</span>
+            </button>
         </div>
-        
-        <div class="content">
-            <button class="button" onclick="checkWallet()">检查钱包连接</button>
-            <button class="button" onclick="getAccount()">获取账户信息</button>
-            
-            <div class="info-box" id="walletInfo">
-                钱包信息将显示在这里
+
+        <button class="activate-btn" id="activateBtn">
+            <i class="fas fa-key"></i>
+            <span>激活账号</span>
+        </button>
+
+        <div class="audio-tip">
+            <i class="fas fa-volume-up"></i>
+            <span>所有客户购买的盲盒价格都一样</span>
+        </div>
+
+        <div class="price">
+            DMT≈<strong>10.2568</strong> USDT
+        </div>
+
+        <div class="mystery-box">
+            <div class="box-3d">
+                <div class="box-face">
+                    <div class="question-mark">?</div>
+                </div>
+            </div>
+            <div class="sparkle" style="top: 20%; left: 80%;"></div>
+            <div class="sparkle" style="top: 70%; left: 20%;"></div>
+            <div class="sparkle" style="top: 40%; left: 30%;"></div>
+        </div>
+
+        <div class="function-grid">
+            <!-- 资产按钮 -->
+            <button class="function-btn" onclick="window.location.href='assets.html'">
+                <div class="function-icon">
+                    <i class="fas fa-wallet"></i>
+                </div>
+                <span class="function-label">我的资产</span>
+            </button>
+
+            <!-- 社区按钮 -->
+            <button class="function-btn" onclick="window.location.href='community.html'">
+                <div class="function-icon community-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <span class="function-label">我的社区</span>
+            </button>
+
+            <!-- FOMO分红按钮 -->
+            <button class="function-btn">
+                <div class="function-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <span class="function-label">FOMO分红</span>
+            </button>
+
+            <!-- 分享好友按钮 -->
+            <button class="function-btn" onclick="showShareModal()">
+                <div class="function-icon">
+                    <i class="fas fa-share-alt"></i>
+                </div>
+                <span class="function-label">分享好友</span>
+            </button>
+
+            <!-- 交易按钮 -->
+            <button class="function-btn">
+                <div class="function-icon">
+                    <i class="fas fa-exchange-alt"></i>
+                </div>
+                <span class="function-label">交易</span>
+            </button>
+
+            <!-- NFT按钮 -->
+            <button class="function-btn">
+                <div class="function-icon">
+                    <i class="fas fa-image"></i>
+                </div>
+                <span class="function-label">我的NFT</span>
+            </button>
+
+            <!-- 语言设置按钮 -->
+            <button class="function-btn">
+                <div class="function-icon">
+                    <i class="fas fa-language"></i>
+                </div>
+                <span class="function-label">语言设置</span>
+            </button>
+
+            <!-- 个人中心按钮 -->
+            <button class="function-btn">
+                <div class="function-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <span class="function-label">个人中心</span>
+            </button>
+        </div>
+
+        <div class="purchase-options">
+            <div class="token-options">
+                <label class="token-option">
+                    <input type="radio" name="token" checked>
+                    <span>100 USDT</span>
+                </label>
+                <label class="token-option">
+                    <input type="radio" name="token">
+                    <span>100 AIOT</span>
+                </label>
+            </div>
+
+            <button class="buy-button">购买</button>
+
+            <div class="available-tokens">
+                可用余额: 200 AIOT
+            </div>
+
+            <div class="progress-title">爆破分红:</div>
+            <div class="progress-container">
+                <svg class="progress-ring" viewBox="0 0 100 100">
+                    <circle class="background" cx="50" cy="50" r="45"/>
+                    <circle class="progress" cx="50" cy="50" r="45"/>
+                </svg>
+                <div class="progress-text">520/1000</div>
+            </div>
+
+            <a href="#" class="view-more">查看更多</a>
+        </div>
+    </div>
+
+    <!-- 分享好友弹窗 -->
+    <div class="share-modal" id="shareModal">
+        <div class="share-modal-content">
+            <button class="close-share-btn" onclick="closeShareModal()">×</button>
+            <div class="share-modal-header">
+                <h2 class="share-modal-title">分享好友</h2>
+            </div>
+            <p class="share-description">复制您的专属邀请链接，邀请好友加入</p>
+            <div class="invite-link-container">
+                <div class="invite-link" id="inviteLink"></div>
+                <button class="copy-btn" onclick="copyInviteLink()">复制邀请链接</button>
             </div>
         </div>
     </div>
 
+    <!-- 提示框 -->
+    <div id="toastMessage" class="toast-message"></div>
+
     <script>
-        async function checkWallet() {
-            const infoBox = document.getElementById('walletInfo');
-            if (typeof window.tp !== 'undefined') {
-                infoBox.innerHTML = '已检测到TP钱包！';
-            } else {
-                infoBox.innerHTML = '未检测到TP钱包，请在TP钱包DApp浏览器中打开';
+        // 获取DOM元素
+        const connectWalletBtn = document.getElementById('connectWalletBtn');
+        const activateBtn = document.getElementById('activateBtn');
+        const menuBtn = document.getElementById('menuBtn');
+        const sideMenu = document.getElementById('sideMenu');
+        const menuOverlay = document.getElementById('menuOverlay');
+        
+        let isConnected = false;
+        let walletAddress = '';
+
+        // 模拟钱包对象
+        window.tp = {
+            _wallet: null,
+            
+            getCurrentWallet: async function() {
+                if (!this._wallet) {
+                    this._wallet = {
+                        address: '0x1234567890abcdef1234567890abcdef12345678',
+                        blockchain: 'bsc',
+                        isActivated: false
+                    };
+                }
+                return this._wallet;
+            },
+
+            checkAccountStatus: async function() {
+                return this._wallet ? this._wallet.isActivated : false;
+            },
+
+            activateAccount: async function() {
+                if (this._wallet) {
+                    this._wallet.isActivated = true;
+                }
+                return true;
+            }
+        };
+
+        // 菜单控制
+        function toggleMenu() {
+            console.log('Toggle menu');
+            if (sideMenu && menuOverlay) {
+                sideMenu.classList.toggle('active');
+                menuOverlay.classList.toggle('active');
             }
         }
 
-        async function getAccount() {
-            const infoBox = document.getElementById('walletInfo');
-            if (typeof window.tp !== 'undefined') {
-                try {
-                    const account = await window.tp.getCurrentWallet();
-                    infoBox.innerHTML = `当前账户信息：<br>地址：${account.address}<br>网络：${account.blockchain}`;
-                } catch (error) {
-                    infoBox.innerHTML = '获取账户信息失败：' + error.message;
+        // 检查URL中是否包含邀请码
+        function checkInviteCode() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const inviteCode = urlParams.get('invite');
+            if (inviteCode) {
+                // 存储邀请码，用于后续绑定上下级
+                localStorage.setItem('inviteCode', inviteCode);
+            }
+            return inviteCode;
+        }
+
+        // 绑定上下级关系
+        async function bindInviteRelation() {
+            const inviteCode = localStorage.getItem('inviteCode');
+            if (!inviteCode || !isConnected) return;
+
+            try {
+                // 这里添加绑定上下级的接口调用
+                console.log('绑定上下级关系:', {
+                    inviter: inviteCode,
+                    invitee: walletAddress
+                });
+                
+                showToast('绑定成功', 'success');
+                // 绑定成功后清除邀请码
+                localStorage.removeItem('inviteCode');
+            } catch (error) {
+                console.error('绑定失败:', error);
+                showToast('绑定失败，请重试', 'error');
+            }
+        }
+
+        // 生成邀请链接
+        function generateInviteLink() {
+            if (!isConnected) return '';
+            // 使用查询参数的方式传递邀请码
+            return `${window.location.origin}${window.location.pathname}?invite=${walletAddress}`;
+        }
+
+        // 连接钱包
+        async function connectWallet() {
+            console.log('Connecting wallet...');
+            try {
+                // 更新按钮状态为连接中
+                connectWalletBtn.classList.add('connecting');
+                connectWalletBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>连接中...</span>';
+
+                // 模拟连接延迟
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                // 获取钱包信息
+                const wallet = await window.tp.getCurrentWallet();
+                if (wallet && wallet.address) {
+                    isConnected = true;
+                    walletAddress = wallet.address;
+                    
+                    // 更新按钮显示
+                    connectWalletBtn.classList.remove('connecting');
+                    connectWalletBtn.classList.add('connected');
+                    connectWalletBtn.innerHTML = `
+                        <i class="fas fa-check-circle"></i>
+                        <span>${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}</span>
+                    `;
+
+                    // 检查激活状态
+                    const isActivated = await window.tp.checkAccountStatus();
+                    activateBtn.style.display = isActivated ? 'none' : 'block';
+
+                    // 连接钱包后检查是否需要绑定上下级
+                    await bindInviteRelation();
                 }
-            } else {
-                infoBox.innerHTML = '请在TP钱包DApp浏览器中打开';
+            } catch (error) {
+                console.error('连接钱包失败:', error);
+                resetWalletButton();
+            }
+        }
+
+        // 断开钱包连接
+        function disconnectWallet() {
+            console.log('Disconnecting wallet...');
+            isConnected = false;
+            walletAddress = '';
+            window.tp._wallet = null;
+            resetWalletButton();
+            activateBtn.style.display = 'none';
+        }
+
+        // 重置钱包按钮状态
+        function resetWalletButton() {
+            connectWalletBtn.classList.remove('connecting', 'connected');
+            connectWalletBtn.innerHTML = '<i class="fas fa-wallet"></i><span>连接钱包</span>';
+        }
+
+        // 激活账号
+        async function activateAccount() {
+            console.log('Activating account...');
+            try {
+                activateBtn.classList.add('loading');
+                activateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>激活中...</span>';
+                
+                await window.tp.activateAccount();
+                activateBtn.style.display = 'none';
+                alert('账号激活成功！');
+                
+            } catch (error) {
+                console.error('激活失败:', error);
+                alert('激活失败，请重试');
+            } finally {
+                activateBtn.classList.remove('loading');
+                activateBtn.innerHTML = '<i class="fas fa-key"></i><span>激活账号</span>';
+            }
+        }
+
+        // 添加事件监听器
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Adding event listeners...');
+            
+            // 检查是否有邀请码
+            const inviteCode = checkInviteCode();
+            if (inviteCode) {
+                showToast('检测到邀请链接，请连接钱包完成绑定', 'success');
+            }
+
+            // 连接钱包按钮点击事件
+            if (connectWalletBtn) {
+                connectWalletBtn.addEventListener('click', function() {
+                    console.log('Wallet button clicked');
+                    if (isConnected) {
+                        disconnectWallet();
+                    } else {
+                        connectWallet();
+                    }
+                });
+            }
+
+            // 激活按钮点击事件
+            if (activateBtn) {
+                activateBtn.addEventListener('click', activateAccount);
+            }
+
+            // 菜单按钮点击事件
+            if (menuBtn) {
+                menuBtn.addEventListener('click', toggleMenu);
+            }
+
+            // 菜单遮罩点击事件
+            if (menuOverlay) {
+                menuOverlay.addEventListener('click', toggleMenu);
+            }
+
+            // NFT按钮点击事件
+            const nftBtn = document.getElementById('nftBtn');
+            if (nftBtn) {
+                nftBtn.addEventListener('click', function() {
+                    console.log('NFT button clicked');
+                    window.location.href = 'nft.html';
+                });
+            }
+
+            // 其他功能按钮点击事件
+            document.querySelectorAll('.function-btn:not(#nftBtn)').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    alert('功能开发中...');
+                });
+            });
+        });
+
+        // 防止菜单滑动时页面也跟着滑动
+        if (sideMenu) {
+            sideMenu.addEventListener('touchmove', function(e) {
+                e.stopPropagation();
+            }, { passive: true });
+        }
+
+        // 添加触摸反馈
+        document.querySelectorAll('.function-btn, .menu-item, .buy-button').forEach(element => {
+            element.addEventListener('touchstart', function() {
+                this.style.opacity = '0.7';
+            });
+
+            element.addEventListener('touchend', function() {
+                this.style.opacity = '1';
+            });
+
+            element.addEventListener('touchcancel', function() {
+                this.style.opacity = '1';
+            });
+        });
+
+        // 处理iOS安全区域
+        function setViewHeight() {
+            let vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }
+
+        setViewHeight();
+        window.addEventListener('resize', setViewHeight);
+
+        // 优化滚动体验
+        document.querySelectorAll('.container, .side-menu').forEach(element => {
+            element.addEventListener('touchstart', function(e) {
+                const top = element.scrollTop;
+                const totalScroll = element.scrollHeight;
+                const currentScroll = top + element.offsetHeight;
+
+                if(top === 0) {
+                    element.scrollTop = 1;
+                } else if(currentScroll === totalScroll) {
+                    element.scrollTop = top - 1;
+                }
+            });
+        });
+
+        // 防止iOS橡皮筋效果
+        document.body.addEventListener('touchmove', function(e) {
+            if(e.target.closest('.container, .side-menu')) return;
+            e.preventDefault();
+        }, { passive: false });
+
+        // 添加音频图标点击效果
+        const audioIcon = document.querySelector('.audio-tip i');
+        if (audioIcon) {
+            audioIcon.addEventListener('click', function() {
+                this.classList.toggle('fa-volume-up');
+                this.classList.toggle('fa-volume-mute');
+            });
+        }
+
+        // 添加购买按钮点击效果
+        const buyButton = document.querySelector('.buy-button');
+        if (buyButton) {
+            buyButton.addEventListener('click', function() {
+                if (typeof window.tp !== 'undefined') {
+                    alert('请确认购买');
+                } else {
+                    alert('请在TP钱包中打开');
+                }
+            });
+        }
+
+        // 显示提示信息
+        function showToast(message, type = '') {
+            const toast = document.getElementById('toastMessage');
+            toast.textContent = message;
+            toast.className = 'toast-message ' + type;
+            toast.style.display = 'block';
+            
+            // 2秒后自动隐藏
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 2000);
+        }
+
+        // 显示分享弹窗
+        function showShareModal() {
+            if (!isConnected) {
+                showToast('请先连接钱包', 'error');
+                return;
+            }
+
+            const modal = document.getElementById('shareModal');
+            const inviteLinkElement = document.getElementById('inviteLink');
+            const inviteLink = generateInviteLink();
+            
+            modal.style.display = 'block';
+            inviteLinkElement.textContent = inviteLink;
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 关闭分享弹窗
+        function closeShareModal() {
+            const modal = document.getElementById('shareModal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // 复制邀请链接
+        function copyInviteLink() {
+            const inviteLink = document.getElementById('inviteLink').textContent;
+            
+            // 创建临时输入框
+            const tempInput = document.createElement('textarea');
+            tempInput.value = inviteLink;
+            document.body.appendChild(tempInput);
+            
+            // 选择并复制文本
+            tempInput.select();
+            try {
+                document.execCommand('copy');
+                showToast('邀请链接已复制', 'success');
+            } catch (err) {
+                showToast('复制失败，请手动复制', 'error');
+            }
+            
+            // 移除临时输入框
+            document.body.removeChild(tempInput);
+        }
+
+        // 点击弹窗外部关闭
+        window.onclick = function(event) {
+            const shareModal = document.getElementById('shareModal');
+            if (event.target == shareModal) {
+                closeShareModal();
             }
         }
     </script>
